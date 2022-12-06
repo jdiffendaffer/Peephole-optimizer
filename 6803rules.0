@@ -1,0 +1,122 @@
+        staa  %1,x
+        ldaa  %2
+        adda %1,x
+        staa  %1,x
+=
+        ; Peephole 1a	- shortened addition
+        adda  %2
+        staa  %1,x
+
+        clra        ; PRINTMODE
+        staa  %1
+        clr   <%2
+=
+        ; Peephole 1b	- faster
+        clra        ; PRINTMODE
+        staa  %1
+        staa  <%2
+
+        ldaa  #$%1
+        adda  <charY
+        staa  <charY
+        ldaa  #$%2
+        staa  <charX
+=
+        ; Peephole 1c	- shorter and faster
+        ldd   #$%1%2
+        adda  <charY
+        std   <charY    ; store Y and X
+
+        ldaa  #%1
+        adda  <charY
+        staa  <charY
+        ldaa  #%2
+        staa  <charX
+=
+        ; Peephole 1d	- shorter and faster
+        ldd   #(%1 * 256)+ %2
+        adda  <charY
+        std   <charY    ; store Y and X
+
+        ldaa  #$%1
+        staa  <charY
+        ldaa  #$%2
+        staa  <charX
+=
+        ; Peephole 1e	- shorter and faster
+        ldd   #$%1%2
+        std   <charY
+
+        ldaa  #%1
+        staa  <charY
+        ldaa  #%2
+        staa  <charX
+=
+        ; Peephole 1f	- shorter & faster
+        ldd   #(%1 * 256)+ %2
+        std   <charY
+
+        ldaa  #%1
+        staa  <charY
+        clr   <charX
+=
+        ; Peephole 1g	- shortener & faster
+        ldd   #(%1 * 256)
+        std   <charY
+
+        ldaa  8,x
+        staa  <dispX
+        ldaa  9,x
+=
+        ; Peephole 1h	- smaller & faster
+        ldd   8,x
+        staa  <dispX
+        tba             ; move 9,x to A
+
+        clr   %1,x
+        clra        ; ANIMATE
+=
+        ; Peephole 1i	- faster
+        clra        ; ANIMATE
+        staa  %1,x
+
+        ldaa  #%1	; PUT
+        staa  <dispY
+        ldaa  %2,x
+        staa  <dispX
+=
+        ; Peephole 1j	- smaller & faster
+        ldaa  #%1	; PUT
+        ldab  %2,x
+        std   <dispY
+
+        clra		; PRINTMODE
+        staa  <%1
+        clr   <%2
+=
+        ; Peephole 1k	- smaller & faster
+        clra        ; PRINTMODE
+		staa  <%1
+		staa  <%2
+
+%1  rts
+%2
+        rts
+=
+%2
+%1  rts
+
+        rts
+%1
+        rts
+=
+%1
+        rts
+
+%1  ldaa  #0	; %2
+=
+%1  clra        ; %2
+
+        ldaa  #0    ; %1
+=
+        clra        ; %1
